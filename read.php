@@ -1,19 +1,15 @@
 <?php
-require_once 'inc/parser.php';
+require_once 'inc/Parser.php';
 require_once 'inc/format.php';
 
-$filePE = array();    
+$filePE = false;    
 if(isset($_FILES['filePE']) && preg_match('/^.*\.{1}[eE][xX][eE]$/', $_FILES['filePE']['name'])) {
     $filename = $_FILES['filePE']['tmp_name'];
     $handle = fopen($filename, 'rb');
     if($handle) {
-        $filePE = parsePEFile($handle);
+        $filePE = Parser::parsePEFile($handle);
         fclose($handle);
-    } else {
-        $filePE = false;
     }
-} else {
-    $filePE = false;
 }
 ?>
 <!DOCTYPE html>
@@ -30,19 +26,19 @@ if(isset($_FILES['filePE']) && preg_match('/^.*\.{1}[eE][xX][eE]$/', $_FILES['fi
             else:
         ?>
         <p>MSDOS header</p>
-        <?php echo printTableFromArray($filePE['headerMSDOS'], 'bordered'); ?>
+        <?php echo printTableFromArray(Parser::getHeaderMSDOS(), 'bordered'); ?>
         <p>COFF header</p>
-        <?php echo printTableFromArray($filePE['headerCOFF'], 'bordered'); ?>
+        <?php echo printTableFromArray(Parser::getHeaderCOFF(), 'bordered'); ?>
         <p>Optional header</p>
-        <?php echo printTableFromArray($filePE['headerOptional'], 'bordered'); ?>
+        <?php echo printTableFromArray(Parser::getHeaderOptional(), 'bordered'); ?>
         <p>Data Directory table</p>
-        <?php echo printTableFromArray($filePE['tableDataDirectory'], 'bordered'); ?>
+        <?php echo printTableFromArray(Parser::getTableDataDirectory(), 'bordered'); ?>
         <p>Section table</p>
-        <?php echo printTableFromArray($filePE['tableSection'], 'bordered'); ?>
+        <?php echo printTableFromArray(Parser::getTableSection(), 'bordered'); ?>
         <p>Import table</p>
-        <?php echo printTableFromArray(isset($filePE['tableImport']) ? $filePE['tableImport'] : null, 'bordered'); ?>
+        <?php echo printTableFromArray(Parser::getTableImport(), 'bordered'); ?>
         <p>Resource tree</p>
-        <?php echo printTableFromArray(isset($filePE['treeResource']) ? $filePE['treeResource'] : null, 'bordered'); ?>
+        <?php echo printTableFromArray(Parser::getTreeResource(), 'bordered'); ?>
         <?php
             endif;
         ?>
