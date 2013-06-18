@@ -1,0 +1,27 @@
+/* 
+    Document   : style
+    Created on : Jun 18, 2013, 12:51:58 AM
+    Author     : sjoorm
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+table.bordered {
+    border: 1px solid black;
+}
+
+table.bordered tr {
+    border: 1px solid black;
+}
+
+table.bordered tr td {
+    border: 1px solid black;
+}
+
+table.bordered tr th {
+    border: 1px solid black;
+}

@@ -1,0 +1,12 @@
+\.orig$
+\.orig\..*$
+\.chg\..*$
+\.rej$
+\.conflict\~$
+.exe
+dist
+build
+test
+nbproject
+.hg
+.hgignore
