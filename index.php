@@ -33,7 +33,7 @@ if(count($matches) > 2) {
         <title>Read PE file's data</title>
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css" media="screen"/>
         <link rel="stylesheet" type="text/css" href="css/style.css" media="screen"/>
-        <script src="js/jquery-2.0.2.js"></script>
+        <script src="js/jquery.js"></script>
         <script src="js/bootstrap.js"></script>
     </head>
     <body>

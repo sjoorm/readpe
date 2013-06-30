@@ -409,6 +409,8 @@ class Parser {
     private static function readTreeResource($handle, $offsetBase, $tableResourceVA, $count) {
         $result = array();
         $resourceDH = self::readHeaderResourceDirectory($handle);
+        $result['directoryHeader'] = $resourceDH;
+        $content = array();
         for($i = 0; $i < $resourceDH['numberOfNameEntries'] + $resourceDH['numberOfIdEntries']; ++$i) {
             $resourceDE = self::readResourceDirectoryEntry($handle);
             $offsetEntry = ftell($handle);
@@ -420,12 +422,11 @@ class Parser {
                     $nameOfEntry .= fread($handle, 1);
                     fread($handle, 1); //multibyte encoding
                 }
-                $result[$i]['name'] = $nameOfEntry;
+                $content[$i]['name'] = $nameOfEntry;
             } else {
-                $result[$i]['ordinal'] = $resourceDE['integerId'];
+                $content[$i]['ordinal'] = $resourceDE['integerId'];
             }
-            $result[$i]['directoryEntry'] = $resourceDE;
-            $result[$i]['directoryHeader'] = $resourceDH;
+            $content[$i]['directoryEntry'] = $resourceDE;
             if(isset($resourceDE['dataEntryRVA'])) {
                 fseek($handle, $offsetBase + $resourceDE['dataEntryRVA']);
                 $resourceDataEntry = self::readResourceDataEntry($handle);
@@ -433,12 +434,13 @@ class Parser {
                 fseek($handle, $offsetData);
                 $data = fread($handle, $resourceDataEntry['size']);
                 $resourceDataEntry['data'] = $data;
-                $result[$i]['content'] = $resourceDataEntry;
+                $content[$i]['dataEntry'] = $resourceDataEntry;
             } else {
                 fseek($handle, $offsetBase + $resourceDE['subdirectoryRVA']);
-                $result[$i]['content'] = self::readTreeResource($handle, $offsetBase, $tableResourceVA, $count + 1);
+                $content[$i] += self::readTreeResource($handle, $offsetBase, $tableResourceVA, $count + 1);
             }
             fseek($handle, $offsetEntry);
+            $result['directoryContent'] = $content;
         }
         return $result;
     }
@@ -464,34 +466,30 @@ class Parser {
         $offsetTableSection = $offsetHeaderOptional + self::$headerCOFF['sizeOfOptionalHeader'];
         fseek($handle, $offsetTableSection);
         self::$tableSection = self::readTableSection($handle, self::$headerCOFF['numberOfSections']);
-        //Import table
+        //Import table and Resource tree
         $tableImportVA = self::$tableDataDirectory['importTable']['virtualAddress'];
+        $treeResourceVA = self::$tableDataDirectory['resourceTable']['virtualAddress'];
         if($tableImportVA) {
             $offsetTableImport = 0;
             $offsetSectionImport = 0;
+            $offsetTreeResource = 0;
             foreach(self::$tableSection as $section) {
                 if($section['virtualAddress'] <= $tableImportVA && 
                    $tableImportVA < $section['virtualAddress'] + $section['sizeOfRawData']) {
                     $offsetTableImport = $section['pointerToRawData'] + $tableImportVA - $section['virtualAddress'];
                     $offsetSectionImport = $section['pointerToRawData'] - $section['virtualAddress'];
-                    break;
                 }
-            }
-            fseek($handle, $offsetTableImport);
-            $is64 = self::$headerOptional['magic'] == 0x10B ? false : true;
-            self::$tableImport = self::readTableImport($handle, $offsetSectionImport, $is64);
-        }
-        //Resource tree
-        $treeResourceVA = self::$tableDataDirectory['resourceTable']['virtualAddress'];
-        if($treeResourceVA) {
-            $offsetTreeResource = 0;
-            foreach(self::$tableSection as $section) {
                 if($section['virtualAddress'] <= $treeResourceVA && 
                    $treeResourceVA < $section['virtualAddress'] + $section['sizeOfRawData']) {
                     $offsetTreeResource = $section['pointerToRawData'] + $treeResourceVA - $section['virtualAddress'];
-                    break;
                 }
             }
+            unset($section);
+            //Import
+            fseek($handle, $offsetTableImport);
+            $is64 = self::$headerOptional['magic'] == 0x10B ? false : true;
+            self::$tableImport = self::readTableImport($handle, $offsetSectionImport, $is64);
+            //Resource
             fseek($handle, $offsetTreeResource);
             self::$treeResource = self::readTreeResource($handle, $offsetTreeResource, $treeResourceVA, 0);
         }

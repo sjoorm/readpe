@@ -1,7 +1,42 @@
 <?php
 
-function formatValue($value) {
+/**
+ * Converts decimal value to hexadecimal and returns it as string
+ * @param integer $value value to be formatted
+ * @return string string representation of hex value(with 0x)
+ */
+function formatDecToHex($value) {
     return (intval($value) == 0 && $value != '0') ? $value : '0x' . dechex($value);
+}
+
+/**
+ * Converts all unprintable characters to '.' in input string
+ * @param string $data input string
+ * @return string formatted string
+ */
+function formatRawData($data, $limit = 0) {
+    $result = '';
+    $length = strlen($data);
+    $left = '';
+    $right = '';
+    for($i = 0; $i < (($limit && $limit < $length) ? $limit : $length); ++$i) {
+        $ord = ord($data[$i]);
+        $left .= (($ord < 0x10) ? '0' . dechex($ord) : dechex($ord) ) . ' ';
+        if($ord >= 32 && $ord <= 126) {
+            $right .= $data[$i];
+        } else {
+            $right .= '.';
+        }
+        if(($i + 1) % 16 == 0 && $i) {
+            $result .= sprintf('%08X', $i - 15) . ": $left | " . htmlspecialchars($right) . "\n";
+            $left = '';
+            $right = '';
+        }
+    }
+    if($limit < $length) {
+        $result .= '...';
+    }
+    return $result;
 }
 
 /**
@@ -29,13 +64,14 @@ function printTableFromArray($array, $recursive, $params = null) {
             $result .= "<td>\n";
             $recursive = true;
             if(is_array($value)) {
-                $result .= ($recursive) ? printTableFromArray($value, $params) : 'array';
+                $result .= ($recursive) ? printTableFromArray($value, $recursive, array_merge($params, array('caption' => 'content'))) : 'array';
             } else {
-                $result .= formatValue($value);
+                $result .= formatDecToHex($value);
             }
             $result .= "\n</td>\n";
             $result .= "</tr>\n";
         }
+        unset($value);
         $result .= "</tbody>\n</table>\n";
     }
     return $result;

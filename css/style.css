@@ -5,3 +5,18 @@
     Description:
         Purpose of the stylesheet follows.
 */
+.treeBox {
+    padding: 5px;
+}
+
+.treeTitle {
+    cursor: pointer;
+}
+
+.treeContent {
+    display: none;
+}
+
+.treeData {
+    font-family: monospace;
+}

@@ -19,8 +19,9 @@ if(isset($_FILES['filePE']) && preg_match('/^.*\.{1}[eE][xX][eE]$/', $_FILES['fi
         <title><?php echo 'PE file\'s data: ' . (isset($_FILES['filePE']['name'])) ? $_FILES['filePE']['name'] : 'Error'; ?></title>
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css" media="screen"/>
         <link rel="stylesheet" type="text/css" href="css/style.css" media="screen"/>
-        <script src="js/jquery-2.0.2.js"></script>
+        <script src="js/jquery.js"></script>
         <script src="js/bootstrap.js"></script>
+        <script src="js/read.js"></script>
     </head>
     <body>
         <?php
@@ -55,25 +56,60 @@ if(isset($_FILES['filePE']) && preg_match('/^.*\.{1}[eE][xX][eE]$/', $_FILES['fi
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="tabMSDOS">
-                        <?php echo printTableFromArray(Parser::getHeaderMSDOS(), false, $class); ?>
+                        <?php
+                            $headerMSDOS = Parser::getHeaderMSDOS();
+                            ob_start();
+                            include 'template/msdos.php';
+                            echo ob_get_clean();
+                        ?>
                     </div>
                     <div class="tab-pane" id="tabCOFF">
-                        <?php echo printTableFromArray(Parser::getHeaderCOFF(), false, $class); ?>
+                        <?php
+                            $headerCOFF = Parser::getHeaderCOFF();
+                            ob_start();
+                            include 'template/coff.php';
+                            echo ob_get_clean();
+                        ?>
                     </div>
                     <div class="tab-pane" id="tabOptional">
-                        <?php echo printTableFromArray(Parser::getHeaderOptional(), false, $class); ?>
+                        <?php
+                            $headerOptional = Parser::getHeaderOptional();
+                            ob_start();
+                            include 'template/optional.php';
+                            echo ob_get_clean();
+                        ?>
                     </div>
                     <div class="tab-pane" id="tabData">
-                        <?php echo printTableFromArray(Parser::getTableDataDirectory(), false, $class); ?>
+                        <?php
+                            $tableDataDirectory = Parser::getTableDataDirectory();
+                            ob_start();
+                            include 'template/data.php';
+                            echo ob_get_clean();
+                        ?>
                     </div>
                     <div class="tab-pane" id="tabSection">
-                        <?php echo printTableFromArray(Parser::getTableSection(), false, $class); ?>
+                        <?php
+                            $tableSection = Parser::getTableSection();
+                            ob_start();
+                            include 'template/section.php';
+                            echo ob_get_clean();
+                        ?>
                     </div>
                     <div class="tab-pane" id="tabImport">
-                        <?php echo printTableFromArray(Parser::getTableImport(), false, $class); ?>
+                        <?php
+                            $tableImport = Parser::getTableImport();
+                            ob_start();
+                            include 'template/import.php';
+                            echo ob_get_clean();
+                        ?>
                     </div>
                     <div class="tab-pane" id="tabResource">
-                        <?php echo printTableFromArray(Parser::getTreeResource(), false, $class); ?>
+                        <?php
+                            $treeResource = Parser::getTreeResource();
+                            ob_start();
+                            include 'template/resource.php';
+                            echo ob_get_clean();
+                        ?>
                     </div>
                 </div>
             </div>
