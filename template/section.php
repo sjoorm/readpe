@@ -91,7 +91,18 @@ require_once '../inc/format.php';
                                 </tr>
                                 <tr>
                                     <td>characteristics</td>
-                                    <td><?php echo formatDecToHex($value['characteristics']); ?></td>
+                                    <td>
+                                        <?php
+                                            $characteristics = '';
+                                            foreach($GLOBALS['sectionCharacteristics'] as $key => $characteristicsValue) {
+                                                if($value['characteristics'] & $key) {
+                                                    $characteristics .= $characteristicsValue . ' ';
+                                                }
+                                            }
+                                            unset($characteristicsValue);
+                                            echo $characteristics;
+                                        ?>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

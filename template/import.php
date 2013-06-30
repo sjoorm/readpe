@@ -57,16 +57,16 @@ require_once '../inc/format.php';
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Hint/Ord(#)</th>
-                                    <th>Name</th>
+                                    <th>Hint</th>
+                                    <th>Name/Ord(#)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach($thunkEntry['import'] as $key => $value): ?>
                                 <tr>
                                     <td><?php echo ($key + 1); ?></td>
-                                    <td><?php echo (isset($value['hint'])) ? formatDecToHex($value['hint']) : '#' . $value['ordinal']; ?></td>
-                                    <td><?php echo formatDecToHex($value['name']); ?></td>
+                                    <td><?php echo (isset($value['hint'])) ? formatDecToHex($value['hint']) : 'null'; ?></td>
+                                    <td><?php echo (isset($value['name'])) ? $value['name'] : $value['ordinal']; ?></td>
                                 </tr>
                                 <?php endforeach;
                                       unset($value); ?>

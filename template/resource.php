@@ -155,21 +155,21 @@ function printResourceTree($treeResource, $css = array('box' => null, 'title' =>
                      ((isset($treeResource['ordinal'])) ? $treeResource['ordinal'] : 'root');
     if(isset($treeResource['dataEntry'])) {
         $data = formatRawData($treeResource['dataEntry']['data'], 64);
-        $content .= "$tab    <div class=\"{$css['content']} {$css['data']}\">\n$tab        <pre>$data</pre>\n$tab    </div>\n";
+        $content .= "$tab    <ul class=\"{$css['content']} {$css['data']}\">\n$tab        <pre>$data</pre>\n$tab    </ul>\n";
         $icon = "<i class=\"icon-plus\"></i>";
     } else {
         $icon = "<i class=\"icon-folder-close\"></i>";
     }
     if(isset($treeResource['directoryHeader'])) {
-        $content .= "$tab    <div class=\"{$css['content']}\">\n";
+        $content .= "$tab    <ul class=\" {$css['content']}\">\n";
         foreach($treeResource['directoryContent'] as $value) {
             $content .= printResourceTree($value, $css, $level + 2);
         }
         unset($value);
-        $content .= "$tab    </div>\n";
+        $content .= "$tab    </ul>\n";
     }
     $result .= "$tab<div class=\"{$css['box']}\">\n";
-    $result .= "$tab    <button class=\"btn btn-link {$css['title']}\">$icon {$nameOrOrdinal}</button>\n";
+    $result .= "$tab<li class=\" {$css['title']}\">$icon {$nameOrOrdinal}</li>\n";
     $result .= "$content";
     $result .= "$tab</div>\n";
     return $result;
@@ -198,12 +198,14 @@ require_once '../inc/format.php';
         </div>
         <button type="button" class="btn"><i class="icon-align-justify"></i></button>
 <?php endif; ?>
+        <ul class="treeBox">
         <?php echo printResourceTree($treeResource, array(
                 'box' => 'treeBox',
                 'title' => 'treeTitle',
                 'content' => 'treeContent',
                 'data' => 'treeData',
             )); ?>
+        </ul>
 <?php if(!$isOutputBuffer): ?>
     </div>
 </body>
