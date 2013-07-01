@@ -6,7 +6,7 @@
  * @return string string representation of hex value(with 0x)
  */
 function formatDecToHex($value) {
-    return (intval($value) == 0 && $value != '0') ? $value : '0x' . dechex($value);
+    return sprintf('0x%02X', intval($value));
 }
 
 /**
@@ -21,14 +21,14 @@ function formatRawData($data, $limit = 0) {
     $right = '';
     for($i = 0; $i < (($limit && $limit < $length) ? $limit : $length); ++$i) {
         $ord = ord($data[$i]);
-        $left .= (($ord < 0x10) ? '0' . dechex($ord) : dechex($ord) ) . ' ';
+        $left .= sprintf('%02X ', $ord);
         if($ord >= 32 && $ord <= 126) {
             $right .= $data[$i];
         } else {
             $right .= '.';
         }
         if(($i + 1) % 16 == 0 && $i) {
-            $result .= sprintf('%08X', $i - 15) . ": $left | " . htmlspecialchars($right) . "\n";
+            $result .= sprintf("%08X: %s | %s\n", $i - 15, $left, htmlspecialchars($right));
             $left = '';
             $right = '';
         }

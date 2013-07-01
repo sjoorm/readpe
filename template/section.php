@@ -41,71 +41,62 @@ require_once '../inc/format.php';
             <thead>
                 <tr>
                     <th>Section name</th>
-                    <th>Section info</th>
+                    <th colspan="2">Section info</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>Field</th>
+                    <th>Value</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach($tableSection as $key => $value): ?>
                 <tr>
-                    <td><?php echo $key; ?></td>
+                    <td rowspan="<?php echo count($value) - 1; ?>"><?php echo $key; ?></td>
+                    <td>virtualSize</td>
+                    <td><?php echo formatDecToHex($value['virtualSize']); ?></td>
+                </tr>
+                <tr>
+                    <td>virtualAddress</td>
+                    <td><?php echo formatDecToHex($value['virtualAddress']); ?></td>
+                </tr>
+                <tr>
+                    <td>sizeOfRawData</td>
+                    <td><?php echo formatDecToHex($value['sizeOfRawData']); ?></td>
+                </tr>
+                <tr>
+                    <td>pointerToRawData</td>
+                    <td><?php echo formatDecToHex($value['pointerToRawData']); ?></td>
+                </tr>
+                <tr>
+                    <td>pointerToRelocations</td>
+                    <td><?php echo formatDecToHex($value['pointerToRelocations']); ?></td>
+                </tr>
+                <tr>
+                    <td>pointerToLineNumbers</td>
+                    <td><?php echo formatDecToHex($value['pointerToLineNumbers']); ?></td>
+                </tr>
+                <tr>
+                    <td>numberOfRelocations</td>
+                    <td><?php echo formatDecToHex($value['numberOfRelocations']); ?></td>
+                </tr>
+                <tr>
+                    <td>numberOfLineNumbers</td>
+                    <td><?php echo formatDecToHex($value['numberOfLineNumbers']); ?></td>
+                </tr>
+                <tr>
+                    <td>characteristics</td>
                     <td>
-                        <table class="table table-condensed table-striped table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Field</th>
-                                    <th>Value</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>virtualSize</td>
-                                    <td><?php echo formatDecToHex($value['virtualSize']); ?></td>
-                                </tr>
-                                <tr>
-                                    <td>virtualAddress</td>
-                                    <td><?php echo formatDecToHex($value['virtualAddress']); ?></td>
-                                </tr>
-                                <tr>
-                                    <td>sizeOfRawData</td>
-                                    <td><?php echo formatDecToHex($value['sizeOfRawData']); ?></td>
-                                </tr>
-                                <tr>
-                                    <td>pointerToRawData</td>
-                                    <td><?php echo formatDecToHex($value['pointerToRawData']); ?></td>
-                                </tr>
-                                <tr>
-                                    <td>pointerToRelocations</td>
-                                    <td><?php echo formatDecToHex($value['pointerToRelocations']); ?></td>
-                                </tr>
-                                <tr>
-                                    <td>pointerToLineNumbers</td>
-                                    <td><?php echo formatDecToHex($value['pointerToLineNumbers']); ?></td>
-                                </tr>
-                                <tr>
-                                    <td>numberOfRelocations</td>
-                                    <td><?php echo formatDecToHex($value['numberOfRelocations']); ?></td>
-                                </tr>
-                                <tr>
-                                    <td>numberOfLineNumbers</td>
-                                    <td><?php echo formatDecToHex($value['numberOfLineNumbers']); ?></td>
-                                </tr>
-                                <tr>
-                                    <td>characteristics</td>
-                                    <td>
-                                        <?php
-                                            $characteristics = '';
-                                            foreach($GLOBALS['sectionCharacteristics'] as $key => $characteristicsValue) {
-                                                if($value['characteristics'] & $key) {
-                                                    $characteristics .= $characteristicsValue . ' ';
-                                                }
-                                            }
-                                            unset($characteristicsValue);
-                                            echo $characteristics;
-                                        ?>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <?php
+                            $characteristics = '';
+                            foreach($GLOBALS['sectionCharacteristics'] as $key => $characteristicsValue) {
+                                if($value['characteristics'] & $key) {
+                                    $characteristics .= $characteristicsValue . ' ';
+                                }
+                            }
+                            unset($characteristicsValue);
+                            echo $characteristics;
+                        ?>
                     </td>
                 </tr>
                 <?php endforeach;

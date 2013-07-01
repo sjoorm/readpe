@@ -45,35 +45,31 @@ require_once '../inc/format.php';
             <thead>
                 <tr>
                     <th>Import name</th>
-                    <th>Import data</th>
+                    <th colspan="3">Import data</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>#</th>
+                    <th>Hint</th>
+                    <th>Name/Ord(#)</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($tableImport as $name => $thunkEntry): ?>
-                <tr>
-                    <td><?php echo $name; ?></td>
-                    <td>
-                        <table class="table table-condensed table-striped table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Hint</th>
-                                    <th>Name/Ord(#)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach($thunkEntry['import'] as $key => $value): ?>
-                                <tr>
-                                    <td><?php echo ($key + 1); ?></td>
-                                    <td><?php echo (isset($value['hint'])) ? formatDecToHex($value['hint']) : 'null'; ?></td>
-                                    <td><?php echo (isset($value['name'])) ? $value['name'] : $value['ordinal']; ?></td>
-                                </tr>
-                                <?php endforeach;
-                                      unset($value); ?>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
+                <?php $flag = true;
+                      foreach($tableImport as $name => $thunkEntry): ?>
+                    <?php foreach($thunkEntry['import'] as $key => $value): ?>
+                    <tr>
+                        <?php if($flag):
+                                  $flag = false; ?>
+                                  <td rowspan="<?php echo count($thunkEntry['import']); ?>"><?php echo $name; ?></td>
+                        <?php endif; ?>
+                        <td><?php echo ($key + 1); ?></td>
+                        <td><?php echo (isset($value['hint'])) ? formatDecToHex($value['hint']) : 'null'; ?></td>
+                        <td><?php echo (isset($value['name'])) ? $value['name'] : $value['ordinal']; ?></td>
+                    </tr>
+                    <?php endforeach;
+                          $flag = true;
+                          unset($value); ?>
                 <?php endforeach;
                       unset($thunkEntry); ?>
             </tbody>

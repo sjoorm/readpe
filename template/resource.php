@@ -154,7 +154,7 @@ function printResourceTree($treeResource, $css = array('box' => null, 'title' =>
     $nameOrOrdinal = (isset($treeResource['name'])) ? $treeResource['name'] : 
                      ((isset($treeResource['ordinal'])) ? $treeResource['ordinal'] : 'root');
     if(isset($treeResource['dataEntry'])) {
-        $data = formatRawData($treeResource['dataEntry']['data'], 64);
+        $data = formatRawData($treeResource['dataEntry']['data'], 256);
         $content .= "$tab    <ul class=\"{$css['content']} {$css['data']}\">\n$tab        <pre>$data</pre>\n$tab    </ul>\n";
         $icon = "<i class=\"icon-plus\"></i>";
     } else {
